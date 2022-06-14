@@ -1,0 +1,89 @@
+﻿@model GithubUsers.Models.GithubUser
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<form asp-controller="Home" asp-action="Index" method="get" name="frmSearch" required>
+    <p>
+        Enter github username: <input type="text" name="userName" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+
+@if (Model != null)
+{
+    @if (Model.RequestedString == "")
+    {
+        <p>Please enter user name.</p>
+    }
+    else
+    {
+        @if (Model.Error != null)
+        {
+            <h3>User Details</h3>
+            <b>@Html.DisplayFor(model => model.Error)</b>
+        }
+        else
+        {
+            <h3>User Details</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Location</th>
+                        <th>Avatar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td>
+                        @Html.DisplayFor(model => model.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Location)
+                    </td>
+                    <td>
+                        <img src="@Html.DisplayFor(model => model.Avatar_url)" alt="Image" height="100" />
+                    </td>
+                </tr>
+            </table>
+
+            @*repos*@
+            @if (Model.Repos.Count == 0)
+            {
+                <h3>Repos</h3>
+                <b>No repos found</b>
+            }
+            else
+            {
+                <h3>Repos</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Stargazers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Repos)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Html.DisplayFor(modelItem => item.Url)" target="_blank">@Html.DisplayFor(modelItem => item.Name)</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Stargazers_count)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    }
+}
